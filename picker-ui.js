@@ -480,15 +480,5 @@
         });
     };
 
-    /* GENERAL UTILITY FUNCTIONS */
-
-    function noop(value) {
-        return value;
-    }
-
-    function int(value) {
-        return value * 1;
-    }
-
     return PickerUI;
 }));
