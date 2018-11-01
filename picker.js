@@ -133,7 +133,7 @@
             }
         }
         return -1;
-    }
+    };
 
     PickerState.prototype.shouldIncludeItem = function(identifier, settings) {
         /**
@@ -272,7 +272,7 @@
         // arrays
         for (identifier in verifyObject) {
             if (verifyObject[identifier] === false) {
-                missingItems.push(identifier)
+                missingItems.push(identifier);
                 current.push(identifier);
             }
         }

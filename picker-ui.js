@@ -135,7 +135,7 @@
         if (sharedFavorites) {
             this.displaySharedList(sharedFavorites);
         }
-    }
+    };
 
     /* GETTERS/SETTERS FOR SETTINGS */
 
