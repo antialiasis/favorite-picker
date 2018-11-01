@@ -897,21 +897,6 @@
         return result;
     }
 
-    function filter(array, func) {
-        /**
-         * Returns an array containing only those items from array for which
-         * func returns a truthy value.
-         */
-        var result = [];
-        var i;
-        for (i = 0; i < array.length; i++) {
-            if (func(array[i])) {
-                result.push(array[i]);
-            }
-        }
-        return result;
-    }
-
     function shuffle(array) {
         /**
          * Shuffles the given array to be in a random order.
