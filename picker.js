@@ -362,7 +362,6 @@
          */
         var i, idx;
         var eliminated = this.arrays.eliminated;
-        var survived = this.arrays.survived;
 
         // Find items that were eliminated by this item.
         for (i = eliminated.length - 1; i >= 0; i--) {
@@ -656,7 +655,6 @@
          * Otherwise, the settings will be set by the settingsFromFavorites
          * option, or set to the default otherwise.
          */
-        var self = this;
         var finalFavorites = [];
         var i;
 
