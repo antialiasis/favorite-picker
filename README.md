@@ -342,7 +342,7 @@ Constructs and returns a PickerState. The options object specifies options for t
 
 #### PickerState public methods
 
-- `getState()`: Returns a *dehydrated state* representing this PickerState. This is a plain Javascript object with the following properties:
+- `getState()`: Returns a *dehydrated state* representing this PickerState. This is a plain JavaScript object with the following properties:
   - `eliminated` (array): A list of objects of the form `{id: 'identifier', eliminatedBy: ['a', 'b']}`, where the `id` is an item identifier and `eliminatedBy` is an array of item identifiers that were picked over this item.
   - `survived` (array): A list of item identifiers that have survived this round so far (i.e. were picked from their respective batches).
   - `current` (array): A list of item identifiers that have yet to be presented to the user this round.
@@ -454,7 +454,7 @@ Constructs and returns a PickerUI. The `picker` parameter should be a `Picker` o
   - `reset`: The default text of generated reset buttons. By default, this is "Reset".
   - `mustSelect`: The alert shown to the user if they try to pick without having selected anything. By default, this is "You must select something first! If you're indifferent, press Pass."
   - `orderedAll`: The message displayed when the user has ordered every included item. By default, this is "You have ordered every available item!"
-  - `noItems`: The message displayed if the user has selected settings such that every item is filtered out. By default, this is "There are no items that fit your criteria! Set some different options and try again.",
+  - `noItems`: The message displayed if the user has selected settings such that every item is filtered out. By default, this is "There are no items that fit your criteria! Set some different options and try again."
   - `resetWarning`: This is a general message prompting the user for whether they would like to reset their state. By default, this is "Are you sure you wish to reset your state? All your found favorites and current progress will be lost."
 - `onUpdate` (`function()`): A function to be called whenever the UI has updated. `this` will be set to the `PickerUI` object, from which you can also access `this.picker` and `this.picker.state`. The Favorite Pokémon Picker uses this function to display the number of Pokémon remaining in this round, a dump of the current dehydrated state for debugging purposes, and more.
 - `getItemImageUrl` (`function(item, settings)`): By default, the picker will use the `image` property of the item as the image source if it's present. However, if you'd rather derive an image URL from other properties of the item and/or the current settings, you can specify this function.
