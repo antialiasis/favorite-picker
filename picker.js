@@ -140,7 +140,10 @@
          * Returns true if this item should be included in the picker
          * according to the current settings.
          */
-        if (this.options.shouldIncludeItem) {
+        if (this.options.getFilteredItems) {
+            return this.options.getFilteredItems(settings).indexOf(identifier) !== -1;
+        }
+        else if (this.options.shouldIncludeItem) {
             return this.options.shouldIncludeItem(identifier, settings);
         }
         return true;
@@ -151,6 +154,9 @@
          * Returns a list of item identifiers that match the given
          * settings.
          */
+        if (this.options.getFilteredItems) {
+            return this.options.getFilteredItems(this.settings);
+        }
         var result = [];
         var i;
         for (i = 0; i < this.options.items.length; i++) {
@@ -473,6 +479,7 @@
             shouldIncludeItem: options.shouldIncludeItem && function (identifier, settings) {
                 return options.shouldIncludeItem(self.itemMap[identifier], settings)
             },
+            getFilteredItems: options.getFilteredItems,
             defaultSettings: defaultSettings
         };
 

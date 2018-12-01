@@ -114,7 +114,7 @@ All you have to do to let the user set the maximum and/or minimum batch size is:
         evaluating: "#evaluating",
         favorites: "#favorites",
         settings: {
-          maxBatchSize: '#max-batch-size'
+            maxBatchSize: '#max-batch-size'
         }
     }
     ```
@@ -175,7 +175,9 @@ var pickerUI = new PickerUI(myPicker, {
 
 ##### Filtering
 
-This is one of the most obvious use cases for settings: filter the items down to a smaller subset according to the user's selections. To do this, set the `shouldIncludeItem` function in the `Picker` options. This is a function that takes two arguments, `item` (one of the item objects you defined) and `settings`, and should return `true` (or another truthy value) if this item should be included given these settings. In order to make such settings work, you may want to add custom properties to your items - you can add any custom properties you like! For example:
+This is one of the most obvious use cases for settings: filter the items down to a smaller subset according to the user's selections.
+
+In most cases, you can do this by setting the `shouldIncludeItem` function in the `Picker` options. This is a function that takes two arguments, `item` (one of the item objects you defined) and `settings`, and should return `true` (or another truthy value) if this item should be included given these settings. In order to make such settings work, you may want to add custom properties to your items - you can add any custom properties you like! For example:
 
 ```
 <p>Include roles:
@@ -206,10 +208,10 @@ var myPicker = new picker.Picker({
         recurringOnly: true
     },
     shouldIncludeItem: function(item, settings) {
-      // Include only if:
-      // 1. the character's role is in the list of roles we've checked, and
-      // 2. we haven't checked the "recurring only" box, or the character is a recurring character.
-      return settings.roles.indexOf(item.role) !== -1 && (!settings.recurringOnly || item.recurring);
+        // Include only if:
+        // 1. the character's role is in the list of roles we've checked, and
+        // 2. we haven't checked the "recurring only" box, or the character is a recurring character.
+        return settings.roles.indexOf(item.role) !== -1 && (!settings.recurringOnly || item.recurring);
     }
 });
 
@@ -222,9 +224,54 @@ var pickerUI = new PickerUI(myPicker, {
         evaluating: "#evaluating",
         favorites: "#favorites",
         settings: {
-          roles: '.roles',
-          recurringOnly: '#recurring-only'
+            roles: '.roles',
+            recurringOnly: '#recurring-only'
         }
+    }
+});
+```
+
+Sometimes, though, you may need more complex filtering than just independently determining inclusion for each item on its own. For these cases, you can use the `getFilteredItems` option, which is a function that takes the current settings and should simply return a list of item identifiers that should be included given these settings. Note that specifying this function will completely override `shouldIncludeItem`! For example:
+
+```
+var items = [
+    {id: 'phoenix', name: 'Phoenix Wright', image: 'phoenixwright.png', role: 'lawyer', recurring: true},
+    {id: 'young-phoenix', name: 'Young Phoenix', image: 'young-phoenix.png', role: 'defendant', recurring: false, base: 'phoenix'},
+    {id: 'edgeworth', name: 'Miles Edgeworth', image: 'edgeworth.png', role: 'lawyer', recurring: true},
+    {id: 'young-edgeworth', name: 'Young Edgeworth', image: 'young-edgeworth.png', role: 'lawyer', recurring: false, base: 'edgeworth'},
+    {id: 'maya', name: 'Maya Fey', image: 'mayafey.png', role: 'assistant', recurring: true},
+    {id: 'redd-white', name: 'Redd White', image: 'reddwhite.png', role: 'witness', recurring: false}
+    ...
+];
+
+var myPicker = new picker.Picker({
+    items: items,
+    localStorageKey: 'picker-state',
+    defaultSettings: {
+        roles: ['lawyer', 'assistant', 'defendant', 'witness', 'other'],
+        recurringOnly: true,
+        noDuplicates: true
+    },
+    getFilteredItems: function(settings) {
+        var used = {};
+        var filteredList = [];
+        for (var i = 0; i < items.length; i++) {
+            // Skip item if:
+            // 1. the character's role is not in the list of roles we've checked, or
+            // 2. we checked the "recurring only" box, and the character is not a recurring character.
+            if (settings.roles.indexOf(items[i].role) === -1 || settings.recurringOnly && !items[i].recurring) continue;
+
+            // If we want no duplicates, make sure we're not already including a different incarnation of the same character.
+            if (settings.noDuplicates) {
+                // Skip if we're already including a character with this base.
+                if (items[i].base && used[items[i].base]) continue;
+
+                // Record that we're including this character, so we don't introduce duplicates later.
+                used[items[i].base || items[i].id] = true;
+            }
+            filteredList.push(items[i].id);
+        }
+        return filteredList;
     }
 });
 ```
@@ -256,20 +303,20 @@ The picker also includes built-in support for shareable permalinks to your favor
             recurringOnly: true
         },
         shouldIncludeItem: function(item, settings) {
-          // Include only if:
-          // 1. the character's role is in the list of roles we've checked, and
-          // 2. we haven't checked the recurring box, *or* the character is recurring.
-          return settings.roles.indexOf(item.role) !== -1 && (!settings.recurringOnly || item.recurring);
+            // Include only if:
+            // 1. the character's role is in the list of roles we've checked, and
+            // 2. we haven't checked the recurring box, *or* the character is recurring.
+            return settings.roles.indexOf(item.role) !== -1 && (!settings.recurringOnly || item.recurring);
         },
         settingsFromFavorites: function(favorites) {
             var hasNonRecurring = false;
             for (var i = 0; i < favorites.length; i++) {
-              if (!favorites[i].recurring) {
-                hasNonRecurring = true;
-              }
+                if (!favorites[i].recurring) {
+                    hasNonRecurring = true;
+                }
             }
             return {
-              recurringOnly: !hasNonRecurring
+                recurringOnly: !hasNonRecurring
             };
         }
     });
@@ -337,6 +384,7 @@ Constructs and returns a PickerState. The options object specifies options for t
 - `items` (array): **Required**. A plain list of all valid item identifiers (IDs).
 - `getBatchSize` (`function(currentSize, settings)`): A function that takes the current number of items in this round and the current settings and returns the number of items that should be displayed in each batch of items. By default this is the `currentSize` divided by five, clamped by the `minBatchSize` and `maxBatchSize` settings.
 - `shouldIncludeItem` (`function(identifier, settings)`): A function that takes an item identifier and the current settings and returns a truthy value if that item should be included given these settings. By default, all items are always included.
+- `getFilteredItems` (`function(settings)`): A function that takes the current settings and returns an array of item identifiers that should be included given these settings. By default, all items are included. (Specifying this will override any `shouldIncludeItem` function.)
 - `defaultSettings` (object): An object of default settings (see the settings part of the documentation).
 
 
@@ -375,6 +423,7 @@ Constructs and returns a Picker. The options object specifies options for the Pi
 - `historyLength` (integer): An integer specifying how many history entries should be maintained for undo/redo purposes. (Default: `3`)
 - `getBatchSize` (`function(currentSize, settings)`): A function that takes the current number of items in this round and the current settings and returns the number of items that should be displayed in each batch of items. By default this is the `currentSize` divided by five, clamped by the `minBatchSize` and `maxBatchSize` settings.
 - `shouldIncludeItem` (`function(item, settings)`): A function that takes an item object and the current settings and returns a truthy value if that item should be included given these settings. By default, all items are included.
+- `getFilteredItems` (`function(settings)`): A function that takes the current settings and returns an array of item identifiers that should be included given these settings. By default, all items are included. (Specifying this will override any `shouldIncludeItem` function.)
 - `modifyState` (`function(state)`): A function that takes a dehydrated state that we want to restore and returns a transformed version of the state. Useful for backwards-compatibility purposes - if the user has an outdated state saved in their browser, this hook allows you to alter the state or even replace it entirely before it's restored. By default, the unmodified state is restored, provided it's a valid state.
 - `onLoadState` (`function(missingItems, extraItems)`): A function called when a saved state has just been loaded, with the `Picker` object as `this`. This hook allows you to do any work that needs to be done after a state is restored. For example, the Favorite Pokémon Picker uses this hook to display a "Welcome back" message on the page explaining that the previous state has been loaded. `missingItems` and `extraItems` are arrays containing any item identifiers not present in the loaded state even though they ought to be there according to the options passed to the picker, and any item identifiers present in the loaded state even though they shouldn't be there, respectively.
   
@@ -383,15 +432,15 @@ Constructs and returns a Picker. The options object specifies options for the Pi
 - `loadState` (`function()`): A function that retrieves and returns a dehydrated state that should be loaded for the user, used to override the default localStorage save feature. This is only run once, when first initializing the picker; if you need to do something like fetching saved state data asynchronously, then construct the Picker object *after* you've fetched the data:
   ```
   fetchMySavedState(function (err, loadedState) {
-    var myPicker = picker.Picker({
-        items: ...,
-        saveState: function (state) {
-            saveMyState(state);
-        },
-        loadState: function() {
-            return loadedState;
-        }
-    });
+      var myPicker = picker.Picker({
+          items: ...,
+          saveState: function (state) {
+              saveMyState(state);
+          },
+          loadState: function() {
+              return loadedState;
+          }
+      });
   });
   ```
 - `favoritesQueryParam`: A string specifying a query parameter used to specify a shortcode string for a favorite list (see the shortcode section of the documentation). (Default: `'favs'`)
