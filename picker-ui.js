@@ -49,10 +49,12 @@
 
         /* PICKER UI EVENT HANDLERS */
 
-        this.elem.evaluating.on('click', '.item', function() {
+        this.elem.evaluating.on('click', '.item', function(e) {
+            e.preventDefault();
             self.select(this);
-        }).on('dblclick', '.item', function() {
+        }).on('dblclick', '.item', function(e) {
             // Prevent double-clicking from selecting the current item if some other items have been selected
+            e.preventDefault();
             var selected = self.getSelected();
             var item = self.getItem(this);
             if (selected.length === 0 || selected.length === 1 && selected[0] === item) {
@@ -62,7 +64,8 @@
             e.preventDefault();
         });
 
-        this.elem.pick.on('click', function() {
+        this.elem.pick.on('click', function(e) {
+            e.preventDefault();
             var selected = self.getSelected();
             if (selected.length === 0) {
                 alert(this.messages.mustSelect);
@@ -72,26 +75,31 @@
             }
         });
 
-        this.elem.pass.on('click', function() {
+        this.elem.pass.on('click', function(e) {
+            e.preventDefault();
             self.pass();
         });
 
-        this.elem.undo.on('click', function() {
+        this.elem.undo.on('click', function(e) {
+            e.preventDefault();
             self.undo();
         });
 
-        this.elem.redo.on('click', function() {
+        this.elem.redo.on('click', function(e) {
+            e.preventDefault();
             self.redo();
         });
 
         if (this.elem.reset) {
-            this.elem.reset.on('click', function() {
+            this.elem.reset.on('click', function(e) {
+                e.preventDefault();
                 self.reset();
             });
         }
 
         if (this.elem.sharedListContinue) {
-            this.elem.sharedListContinue.on('click', function() {
+            this.elem.sharedListContinue.on('click', function(e) {
+                e.preventDefault();
                 self.picker.resetToFavorites($.map(self.picker.getSharedFavorites(), function(item) { return item.id; }));
                 console.log(self.picker.getSettings());
                 self.setSettings(self.picker.getSettings());
@@ -101,7 +109,8 @@
         }
 
         if (this.elem.sharedListSkip) {
-            this.elem.sharedListSkip.on('click', function() {
+            this.elem.sharedListSkip.on('click', function(e) {
+                e.preventDefault();
                 self.dismissSharedList();
             });
         }
@@ -261,9 +270,9 @@
             func();
         }
         else {
-            this.elem.evaluating.fadeOut('fast', function() {
+            this.elem.evaluating.animate({opacity: 0}, 'fast', function() {
                 func();
-                self.elem.evaluating.fadeIn('fast');
+                self.elem.evaluating.animate({opacity: 1}, 'fast');
             });
         }
     };
