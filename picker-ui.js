@@ -298,6 +298,7 @@
         this.elem.evaluating.empty();
         $.each(batch, function() {
             self.elem.evaluating.append(self.getItemElem(this, self.picker.getSettings()));
+            self.elem.evaluating.append('<a href="' + this.video_link + '" target="_blank">'+ this.name + '</span><br>');
         });
         this.updatePickPass(true);
     };
@@ -325,8 +326,13 @@
         var self = this;
         var favorites = this.picker.getFavorites();
         this.elem.favorites.empty();
+        var count = 0;
         $.each(favorites, function() {
+            count = count + 1;
+            self.elem.favorites.append('<b>' + count + '.</b>');
             self.elem.favorites.append(self.getItemElem(this, self.picker.getSettings()));
+            self.elem.favorites.append('<a href="' + this.video_link + '" target="_blank">'+ this.name + '</span><br>');
+
         });
         if (this.elem.shortcodeLink && this.picker.options.favoritesQueryParam && this.picker.options.shortcodeLength) {
             this.elem.shortcodeLink.attr('href', this.picker.getShortcodeLink()).toggle(favorites.length > 0);
