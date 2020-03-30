@@ -2,6 +2,8 @@
 
 This is a tool that allows users to pick songs repeatedly, until a single favorite is found, and then continue to pick for second place and so on, constructing a list. It is a specialization of the [Favorite Picker](https://github.com/antialiasis/favorite-picker). I changed the original formatting a bit and added a YouTube link for each song. The YouTube links will probably die soon because Disney. 
 
+It will take about 20-60 choices to find your #1 favorite movie, depending on how many choices you select each round. You can keep choosing movies until you've sorted all 232, or just stop when you hit a top 5 or top 10.
+
 Songs not included:
 
 - anything from live action or pixar movies
@@ -10,6 +12,7 @@ Songs not included:
 - reprises
 - songs not created specifically for the movie (e.g. Elvis songs in Lilo & Stitch)
 
+**WARNING**: There is no history. If you refresh the browser, you will lose your progress. There is no option to save your progress or your results.
 
 ## Basic usage
 
