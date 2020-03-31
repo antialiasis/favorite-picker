@@ -41,7 +41,8 @@
             current: copyArray(this.arrays.current),
             evaluating: copyArray(this.arrays.evaluating),
             favorites: copyArray(this.arrays.favorites),
-            settings: copyObject(this.settings)
+            settings: copyObject(this.settings),
+            roundSize: this.roundSize
         };
     };
 
@@ -61,6 +62,7 @@
             favorites: []
         };
         this.batchSize = this.getBatchSize(this.arrays.current.length);
+        this.setRoundSize();
 
         shuffle(this.arrays.current);
 
@@ -83,6 +85,11 @@
             favorites: copyArray(state.favorites)
         };
         this.batchSize = this.arrays.evaluating.length;
+        if ('roundSize' in state) {
+            this.roundSize = state.roundSize;
+        } else {
+            this.setRoundSize();
+        }
 
         this.validate();
     };
@@ -101,12 +108,24 @@
         /**
          * Sets the settings.
          */
+        var prevNumItems = this.items.length;
+        var prevNumFavorites = this.arrays.favorites.length;
+        var prevNumEliminated = this.arrays.eliminated.length;
+
         this.settings = settings;
         this.items = this.getFilteredItems();
 
         this.validate();
         this.resetBatchSize();
+        this.roundSize -= prevNumItems - this.items.length - prevNumFavorites + this.arrays.favorites.length - prevNumEliminated + this.arrays.eliminated.length;
+
     };
+    PickerState.prototype.setRoundSize = function() {
+        /**
+         * Sets the round size to the current number of items remaining.
+         */
+        this.roundSize = Math.max(0, this.items.length - this.arrays.favorites.length - this.arrays.eliminated.length - 1);
+    }
 
     PickerState.prototype.setFavorites = function(favorites) {
         /**
@@ -114,8 +133,13 @@
          * Since it runs validate, it should be fine if this changes the
          * actual contents of the list.
          */
+        var prevNumFavorites = this.arrays.favorites.length;
+        var prevNumEliminated = this.arrays.eliminated.length
+
         this.arrays.favorites = favorites;
         this.validate();
+        this.roundSize += prevNumFavorites - this.arrays.favorites.length + prevNumEliminated - this.arrays.eliminated.length;
+
     };
 
     /* STATE UTILITY FUNCTIONS */
@@ -413,6 +437,7 @@
         // the new survivors.
         if (this.arrays.current.length === 0 && this.arrays.survived.length === 1) {
             this.addToFavorites(this.arrays.survived.pop());
+            this.setRoundSize();
             this.nextRound();
             return;
         }
@@ -462,7 +487,7 @@
             if (options.shortcodeLength && (!options.items[i].shortcode || options.items[i].shortcode.length !== options.shortcodeLength)) {
                 console.error("You have defined a shortcode length of " + options.shortcodeLength + "; however, you have an item with a shortcode that does not match this length (" + options.items[i].shortcode + "). The shortcode functionality only works if the item shortcodes are of a consistent length.", options.items[i]);
                 return;
-            } 
+            }
             this.itemMap[options.items[i].id] = options.items[i];
         }
 

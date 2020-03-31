@@ -275,13 +275,34 @@
             padding: 0.9em 2em;
             margin: 0 0.2em;
         }
+
+        .picker-info {
+            text-align:center;
+            font-size:smaller;
+        }
+
+        #progress-bar {
+            display: block;
+            margin: auto;
+            height: 15px;
+            width: 150px;
+            margin-top: 5px;
+            background: #CDF;
+        }
+
+        #progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: #58F;
+        }
     </style>
 </head>
 
 <body>
     <h1>Picker</h1>
 
-    <p>You can include any content you want here.</p>
+    <p>For each group of songs presented to you, click one or more of your favorites from that group and press the "Pick" button. Eventually, your favorite songs will start appearing under "Found Favorites". You can continue as long as you like.</p>
 
     <div id="container">
 
@@ -290,8 +311,16 @@
             </ul>
 
             <p id="buttons"><button id="pick">Pick</button> <button id="pass">Pass</button> <button
-                    id="undo">Undo</button> <button id="redo">Redo</button></p>
+                id="undo">Undo</button> <button id="redo">Redo</button></p>
+
+            <div class="picker-info">
+                <p>Songs remaining to be eliminated before next favorite is found: <span id="remaining"></span></p>
+
+                <p>Progress towards next favorite: <span id="progress-bar"><span></span></span></p>
+            </div>
         </div>
+
+
 
         <div id="secondary">
             <h2>Found favorites</h2>
@@ -342,29 +371,41 @@
                 sharedList: "#shared-list",
                 sharedListContinue: "#shared-list-continue",
                 sharedListSkip: ".shared-list-skip"
+            },
+            onUpdate: function(updateType) {
+                var total = this.picker.state.items.length;
+                var favorites = this.picker.state.arrays.favorites.length;
+                var eliminated = this.picker.state.arrays.eliminated.length;
+                var remaining = Math.max(0, total - favorites - eliminated - 1);
+
+                $("#remaining").text(remaining);
+
+                updateProgressBar((1 - (remaining / this.picker.state.roundSize)) * 100, updateType);
             }
         });
 
         pickerUI.initialize();
 
-        /* Sortable favorites - you can safely remove this, and the Sortable.min.js script, if you don't want to be able to sort your favorite list. */
-        var sortable = new Sortable(pickerUI.elem.favorites.get(0), {
-            draggable: '.item',
-            animation: 100,
-            onStart: function () {
-                pickerUI.elem.favorites.addClass("sorting");
-            },
-            onEnd: function () {
-                pickerUI.elem.favorites.removeClass("sorting");
-            },
-            onUpdate: function () {
-                myPicker.setFavorites(pickerUI.elem.favorites.children().map(function () {
-                    return pickerUI.getItem(this);
-                }).get());
-                pickerUI.update(true);
+        /* PROGRESS BAR */
+
+        function updateProgressBar(value, updateType) {
+            var $progressBar = $("#progress-bar span");
+
+            if (['pick', 'undo', 'redo'].indexOf(updateType) !== -1) {
+                if (!value && updateType !== 'undo') {
+                    $progressBar.animate({ width: '100%' }, 400, function () {
+                        $progressBar.width(0);
+                    });
+                } else {
+                    if (!$progressBar.width() && updateType === 'undo') {
+                        $progressBar.width("100%")
+                    }
+                    $progressBar.animate({ width: value + '%' }, 400);
+                }
+            } else {
+                $progressBar.width(value + '%');
             }
-        });
-/* End sortable favorites */
+        }
     </script>
 </body>
 
