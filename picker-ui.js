@@ -42,7 +42,7 @@
             if (this.elem.settings.hasOwnProperty(key)) {
                 this.elem.settings[key].on('change', function() {
                     self.picker.setSettings(self.getSettings());
-                    self.update(true);
+                    self.update(true, 'setting');
                 });
             }
         }
@@ -103,7 +103,7 @@
                 self.picker.resetToFavorites($.map(self.picker.getSharedFavorites(), function(item) { return item.id; }));
                 console.log(self.picker.getSettings());
                 self.setSettings(self.picker.getSettings());
-                self.update(true);
+                self.update(true, 'continue');
                 self.dismissSharedList();
             });
         }
@@ -138,7 +138,7 @@
          * Initializes UI.
          */
         this.setSettings(this.picker.getSettings());
-        this.update();
+        this.update(false, 'initialize');
 
         var sharedFavorites = this.picker.getSharedFavorites();
         if (sharedFavorites) {
@@ -339,11 +339,13 @@
         }
     };
 
-    PickerUI.prototype.update = function(quick) {
+    PickerUI.prototype.update = function(quick, updateType) {
         /**
          * Perform a full UI update based on the current state. The update is
          * immediate if quick is true; otherwise, the Pokémon display will be
          * faded out/in.
+         *
+         * The updateType denotes what kind of action triggered the update.
          */
         var self = this;
 
@@ -356,7 +358,7 @@
             }
             self.updateFavorites();
             if (self.options.onUpdate) {
-                self.options.onUpdate.call(self);
+                self.options.onUpdate.call(self, updateType);
             }
             self.canPick = true;
         }, quick);
@@ -403,7 +405,7 @@
         if (!this.canPick) return;
         this.canPick = false;
         this.picker.pick(items);
-        this.update();
+        this.update(false, 'pick');
     };
 
     PickerUI.prototype.pass = function() {
@@ -413,7 +415,7 @@
         if (!this.canPick) return;
         this.canPick = false;
         this.picker.pass();
-        this.update();
+        this.update(false, 'pass');
     };
 
     PickerUI.prototype.undo = function() {
@@ -423,7 +425,7 @@
         if (this.picker.canUndo()) {
             this.picker.undo();
             this.setSettings(this.picker.getSettings());
-            this.update();
+            this.update(false, 'undo');
         }
     };
 
@@ -434,7 +436,7 @@
         if (this.picker.canRedo()) {
             this.picker.redo();
             this.setSettings(this.picker.getSettings());
-            this.update();
+            this.update(false, 'redo');
         }
     };
 
@@ -445,7 +447,7 @@
         var untouched = this.picker.isUntouched();
         if (untouched || confirm(this.messages.resetWarning)) {
             this.picker.reset();
-            this.update();
+            this.update(false, 'reset');
         }
     };
 
