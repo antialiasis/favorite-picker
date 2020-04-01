@@ -3,10 +3,10 @@
 
 <head>
     <meta name="viewport" content="initial-scale=1.0">
-    <title>Picker</title>
+    <title>Favorite Disney Song Picker</title>
     <style>
         body {
-            background: #FFF;
+            background: radial-gradient(circle, rgba(79,155,217,0.25) 60%, rgba(79,115,217,0.35) 100%);
             color: #000;
             font-family: verdana, sans-serif;
             font-size: 10pt;
@@ -105,6 +105,10 @@
             background: #ACF;
         }
 
+        #reset {
+            border: red solid 1px;
+            color: red;
+        }
         .item-list {
             padding: 0;
             list-style-type: none;
@@ -145,7 +149,7 @@
             }
 
             .item-list li {
-                line-height: 75px;
+                line-height: 70px;
                 height: 75px;
                 width: 75px;
             }
@@ -172,7 +176,7 @@
         }
 
         .item-list li:hover {
-            background: #CDF;
+            background: #58F;
         }
 
         .item-list.sorting li:hover {
@@ -180,7 +184,7 @@
         }
 
         #evaluating li.selected {
-            border: 3px solid #7AC;
+            border: solid #004cff;
         }
 
         #evaluating,
@@ -287,7 +291,7 @@
             height: 15px;
             width: 150px;
             margin-top: 5px;
-            background: #CDF;
+            background: #CCC;
         }
 
         #progress-bar span {
@@ -297,10 +301,11 @@
             background: #58F;
         }
     </style>
+    <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/draav/favorite-disney-song-picker/master/favicon.png"/>
 </head>
 
 <body>
-    <h1>Picker</h1>
+    <h1>Favorite Disney Song Picker</h1>
 
     <p>For each group of songs presented to you, click one or more of your favorites from that group and press the "Pick" button. Eventually, your favorite songs will start appearing under "Found Favorites". You can continue as long as you like.</p>
 
@@ -314,6 +319,7 @@
                 <button id="pass">Pass</button>
                 <button id="undo">Undo</button>
                 <button id="redo">Redo</button>
+                <button id="reset">Reset</button>
             </p>
 
             <div class="picker-info">
@@ -366,6 +372,7 @@
                 pass: "#pass",
                 undo: "#undo",
                 redo: "#redo",
+                reset: "#reset",
                 evaluating: "#evaluating",
                 favorites: "#favorites",
                 shortcodeLink: "#shortcode-link",
