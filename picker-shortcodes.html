@@ -269,6 +269,27 @@ button.disabled:hover {
     padding:0.9em 2em;
     margin:0 0.2em;
 }
+
+.picker-info {
+    text-align:center;
+    font-size:smaller;
+}
+
+#progress-bar {
+    display: block;
+    margin: auto;
+    height: 15px;
+    width: 150px;
+    margin-top: 5px;
+    background: #CDF;
+}
+
+#progress-bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: #58F;
+}
 </style>
 </head>
 <body>
@@ -283,6 +304,11 @@ button.disabled:hover {
 </ul>
 
 <p id="buttons"><button id="pick">Pick</button> <button id="pass">Pass</button> <button id="undo">Undo</button> <button id="redo">Redo</button></p>
+
+<div class="picker-info">
+    <p>Songs remaining to be eliminated before next favorite is found: <span id="remaining"></span></p>
+    <p>Progress towards next favorite: <span id="progress-bar"><span></span></span></p>
+</div>
 </div>
 
 <div id="secondary">
@@ -334,6 +360,16 @@ var pickerUI = new PickerUI(myPicker, {
         sharedList: "#shared-list",
         sharedListContinue: "#shared-list-continue",
         sharedListSkip: ".shared-list-skip"
+    },
+    onUpdate: function(updateType) {
+        var total = this.picker.state.items.length;
+        var favorites = this.picker.state.arrays.favorites.length;
+        var eliminated = this.picker.state.arrays.eliminated.length;
+        var remaining = Math.max(0, total - favorites - eliminated - 1);
+
+        $("#remaining").text(remaining);
+
+        updateProgressBar((1 - (remaining / this.picker.state.roundSize)) * 100, updateType);
     }
 });
 
