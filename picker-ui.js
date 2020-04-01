@@ -68,7 +68,7 @@
             e.preventDefault();
             var selected = self.getSelected();
             if (selected.length === 0) {
-                alert(this.messages.mustSelect);
+                alert(self.messages.mustSelect);
             }
             else {
                 self.pick(selected);
