@@ -16,6 +16,12 @@ Songs not included:
 
 ## Basic usage
 
+Navigate to https://draav.github.io/favorite-disney-song-picker/ and go crazy
+
+---
+
+## How to run the site locally 
+
 Download this repository as a zip folder. 
 
 ![download zip](images/download_zip.png)
