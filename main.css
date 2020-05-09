@@ -1,4 +1,5 @@
 body {
+  overscroll-behavior-y: none;
   background: radial-gradient(
     circle,
     rgba(79, 155, 217, 0.25) 60%,
