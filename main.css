@@ -1,0 +1,297 @@
+body {
+  background: radial-gradient(
+    circle,
+    rgba(79, 155, 217, 0.25) 60%,
+    rgba(79, 115, 217, 0.35) 100%
+  );
+  color: #000;
+  font-family: verdana, sans-serif;
+  font-size: 10pt;
+  margin: 0;
+  padding: 10px;
+}
+
+a:link,
+a:visited {
+  color: #008;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:active,
+a:hover {
+  color: #acf;
+}
+
+.info {
+  font-weight: bold;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 0;
+  border-radius: 3px;
+  padding: 0.3em 0.5em;
+  background: #ccc;
+  color: #000;
+}
+
+button:hover {
+  background: #ddd;
+}
+
+button.disabled {
+  background: #ddd;
+  color: #888;
+  cursor: not-allowed;
+}
+
+button.disabled:hover {
+  background: #ddd;
+}
+
+#container {
+  position: relative;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  /* Put the found favorites beside the picking div when the window is sufficiently large */
+  #picking {
+    float: left;
+    width: 636px;
+  }
+
+  #secondary {
+    margin-left: 646px;
+  }
+}
+
+@media (min-width: 1300px) {
+  /* Once we get to the point where 636px is less than half of the width of the screen, make the picking div just take up half */
+  #picking {
+    width: 50%;
+  }
+
+  #secondary {
+    margin-left: 51%;
+  }
+}
+
+#pick {
+  background: #58f;
+  color: #fff;
+  font-size: larger;
+  font-weight: bold;
+  width: 6em;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#pick.disabled {
+  background: #acf;
+}
+
+#pick:hover {
+  background: #acf;
+}
+
+#reset {
+  border: red solid 1px;
+  color: red;
+}
+.item-list {
+  padding: 0;
+  list-style-type: none;
+  line-height: 100px;
+}
+
+.item-list li {
+  margin: 0;
+  display: inline-block;
+  height: 100px;
+  width: 100px;
+  line-height: 100px;
+  border: 3px solid transparent;
+  text-align: center;
+  position: relative;
+  vertical-align: top;
+  overflow: hidden;
+  border-radius: 53px;
+  background: #f7f7f7;
+  color: #000;
+}
+
+.item-list li img {
+  vertical-align: middle;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.item-list li span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+@media (max-width: 636px) {
+  .item-list {
+    line-height: 75px;
+  }
+
+  .item-list li {
+    line-height: 70px;
+    height: 75px;
+    width: 75px;
+  }
+}
+
+@media (max-width: 423px) {
+  .item-list {
+    line-height: 50px;
+  }
+
+  .item-list li {
+    line-height: 50px;
+    height: 50px;
+    width: 50px;
+  }
+}
+
+#evaluating li {
+  cursor: pointer;
+}
+
+#favorites li {
+  cursor: move;
+}
+
+.item-list li:hover {
+  background: #58f;
+}
+
+.item-list.sorting li:hover {
+  background: #f7f7f7;
+}
+
+#evaluating li.selected {
+  border: solid #004cff;
+}
+
+#evaluating,
+#buttons {
+  text-align: left;
+  margin: auto;
+}
+
+#evaluating li.notice {
+  width: auto;
+  height: auto;
+  max-width: 260px;
+  margin: auto;
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 30px 30px;
+  color: #000;
+  text-align: center;
+  line-height: 1.4;
+  cursor: auto;
+  font-size: 10pt;
+}
+
+#buttons {
+  margin-top: 30px;
+  position: relative;
+  z-index: 3;
+}
+
+#shared-list-modal {
+  position: absolute;
+  background: #fff;
+  margin: 60px auto;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 650px;
+  max-width: 95%;
+  box-sizing: border-box;
+  padding: 20px 50px 50px;
+  box-shadow: 1px 1px 5px #333;
+  z-index: 100;
+}
+
+@media (max-width: 700px) {
+  #shared-list-modal {
+    padding: 20px;
+  }
+}
+
+#shared-list-modal:before {
+  content: "";
+  position: fixed;
+  background: #fff;
+  opacity: 0.5;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+
+#shared-list-modal .item-list {
+  text-align: center;
+  margin: 2em 0;
+}
+
+#shared-list-modal .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  line-height: 30px;
+  color: #aaa;
+  font-weight: bold;
+  text-align: center;
+  background: none;
+  padding: 0;
+  font-size: larger;
+}
+
+#shared-list-modal .close:hover {
+  background: #eee;
+}
+
+#shared-list-modal .buttons {
+  text-align: center;
+  line-height: 3.5em;
+}
+
+#shared-list-modal button {
+  padding: 0.9em 2em;
+  margin: 0 0.2em;
+}
+
+.picker-info {
+  text-align: center;
+  font-size: smaller;
+}
+
+#progress-bar {
+  display: block;
+  margin: auto;
+  height: 15px;
+  width: 150px;
+  margin-top: 5px;
+  background: #ccc;
+}
+
+#progress-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #58f;
+}
